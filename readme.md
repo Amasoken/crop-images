@@ -10,6 +10,8 @@ This is a tool for Windows that can crop wide screenshots to the HD size. Just d
 4. For convenience you can create a shortcut on your desktop to the bat file and drag the images on this shortcut
     - Shortcut can be created by dragging the bat file onto the desktop with the `alt` key pressed.
 
+![](cropping.gif)
+
 ## Settings
 
 In the bat file there some parameters that can be adjusted:
