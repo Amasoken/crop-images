@@ -1,0 +1,21 @@
+{
+    "name": "crop-images-via-drag-and-drop",
+    "version": "0.1.0",
+    "description": "Crop images to HD size via drag and drop onto a bat file",
+    "main": "index.js",
+    "author": "Amasoken",
+    "license": "MIT",
+    "keywords": [
+        "batch",
+        "image crop",
+        "drag and drop",
+        "windows"
+    ],
+    "homepage": "https://github.com/Amasoken/crop-images-via-drag-and-drop#readme",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "jimp": "^0.16.1"
+    }
+}
