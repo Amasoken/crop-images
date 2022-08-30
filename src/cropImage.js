@@ -22,6 +22,21 @@ const cropImage = async (file, preset, mode = safe) => {
             const imageWidth = image.getWidth();
             const imageHeight = image.getHeight();
 
+            const needsCropX = width < imageWidth;
+            const needsCropY = height < imageHeight;
+
+            if (!needsCropX || !needsCropY) {
+                console.log(
+                    'The image size',
+                    [imageWidth, imageHeight],
+                    'is less or equal to the crop size',
+                    [width, height],
+                    'skipping image'
+                );
+
+                throw new Error('Image is less than the crop size');
+            }
+
             const xValid = x >= 0 && x <= imageWidth && x + width <= imageWidth;
             const yValid = y >= 0 && y <= imageHeight && y + height <= imageHeight;
 
@@ -29,7 +44,7 @@ const cropImage = async (file, preset, mode = safe) => {
                 console.log(
                     "Can't crop the image of a size ",
                     [imageWidth, imageHeight],
-                    'to the specified coordinates from ',
+                    'to the specified coordinates from',
                     [x, y],
                     'until',
                     [width, height]
