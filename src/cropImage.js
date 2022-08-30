@@ -3,6 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const { MODES, TEMP_FOLDER_PATH } = require('./consts');
 
+const regExp = /.+\.(png|jpg|jpeg)/;
+
 const createTempFolder = (path = TEMP_FOLDER_PATH) => {
     try {
         fs.accessSync(path, fs.constants.F_OK);
@@ -10,6 +12,44 @@ const createTempFolder = (path = TEMP_FOLDER_PATH) => {
         console.log('Creating temp directory:', path);
         fs.mkdirSync(path);
     }
+};
+
+const handleCrop = async (fileOrFolder, preset, parseDirectories, isRecursive, mode, depth = 0) => {
+    let success = 0,
+        errors = 0;
+
+    const stats = fs.lstatSync(fileOrFolder);
+    if (stats.isFile() && regExp.test(fileOrFolder)) {
+        if (await cropImage(fileOrFolder, preset, mode)) {
+            success++;
+        } else {
+            errors++;
+        }
+    } else if (stats.isDirectory() && parseDirectories) {
+        if (!isRecursive && depth > 0) {
+            console.log('Non recursive mode, skipping folder ' + fileOrFolder + '\n=====');
+            return [0, 0];
+        }
+
+        console.log('Parsing folder', fileOrFolder + '\n---');
+        const files = fs.readdirSync(fileOrFolder);
+
+        for (const filePath of files) {
+            const [successCount, errorCount] = await handleCrop(
+                path.join(fileOrFolder, filePath),
+                preset,
+                parseDirectories,
+                isRecursive,
+                mode,
+                depth + 1
+            );
+
+            errors += errorCount;
+            success += successCount;
+        }
+    }
+
+    return [success, errors];
 };
 
 const cropImage = async (file, preset, mode = safe) => {
@@ -25,16 +65,13 @@ const cropImage = async (file, preset, mode = safe) => {
             const needsCropX = width < imageWidth;
             const needsCropY = height < imageHeight;
 
-            if (!needsCropX || !needsCropY) {
-                console.log(
-                    'The image size',
-                    [imageWidth, imageHeight],
-                    'is less or equal to the crop size',
-                    [width, height],
-                    'skipping image'
-                );
+            if (!needsCropX && !needsCropY) {
+                console.log('Skipped. The image size', [imageWidth, imageHeight], 'is less or equal to the crop size', [
+                    width,
+                    height,
+                ]);
 
-                throw new Error('Image is less than the crop size');
+                return false;
             }
 
             const xValid = x >= 0 && x <= imageWidth && x + width <= imageWidth;
@@ -77,4 +114,4 @@ const cropImage = async (file, preset, mode = safe) => {
         });
 };
 
-module.exports = { cropImage, createTempFolder };
+module.exports = { createTempFolder, handleCrop };
