@@ -1,3 +1,4 @@
+const chalk = require('chalk');
 const { createTempFolder, handleCrop } = require('./src/cropImage');
 const { parseArgs } = require('./src/parseArgs');
 const { MODES, TEMP_FOLDER_PATH } = require('./src/consts');
@@ -13,17 +14,26 @@ console.log('\n=====');
 const cropImages = async () => {
     createTempFolder();
     let success = 0,
+        skipped = 0,
         errors = 0;
 
     for (const path of fileList) {
-        const [successCount, errorCount] = await handleCrop(path, preset, parseDirectories, isRecursive, mode);
+        const [successCount, skippedCount, errorCount] = await handleCrop(
+            path,
+            preset,
+            parseDirectories,
+            isRecursive,
+            mode
+        );
 
-        errors += errorCount;
         success += successCount;
+        skipped += skippedCount;
+        errors += errorCount;
     }
 
-    console.log('Cropped', success, 'images');
-    if (errors) console.log('Skipped', errors, 'images');
+    console.log(chalk.green('Cropped'), success);
+    if (skipped) console.log(chalk.blueBright('Skipped'), skipped);
+    if (errors) console.log(chalk.red('Errors:'), errors);
 };
 
 cropImages();

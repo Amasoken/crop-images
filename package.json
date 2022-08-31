@@ -16,6 +16,7 @@
         "start": "node index.js"
     },
     "dependencies": {
+        "chalk": "^4.1.2",
         "jimp": "^0.16.1"
     }
 }
