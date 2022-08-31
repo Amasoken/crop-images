@@ -1,6 +1,12 @@
 @echo off
 
-@REM node app_folder/index.js [preset] [image replace mode] [dropped files]
-node "%~dp0index.js" CROP_HD_LEFT safe %*
+@REM 1. node app_folder/index.js - starts the app
+@REM 2. [preset] - CROP_HD_LEFT or CROP_HD_RIGHT
+@REM 3. [image replace mode] - safe or unsafe
+@REM 4. [directory parse mode] - imageOnly or withDirectories
+@REM 5. [recursive] - recursive or notRecursive
+@REM 6. [dropped files] - any files you dropped on the bat. Should be folders, png or jpg images
+
+node "%~dp0index.js" CROP_HD_LEFT safe imageOnly notRecursive %*
 
 pause

@@ -11,7 +11,17 @@ const MODES = {
     unsafe: 'unsafe',
 };
 
+const PROCESS_DIRECTORIES = {
+    imageOnly: false,
+    withDirectories: true,
+};
+
+const RECURSION_MODE = {
+    recursive: true,
+    notRecursive: false,
+};
+
 const TEMP_FOLDER_NAME = 'temp';
 const TEMP_FOLDER_PATH = path.join(__dirname, '../', TEMP_FOLDER_NAME);
 
-module.exports = { PRESETS, MODES, TEMP_FOLDER_PATH };
+module.exports = { PRESETS, MODES, TEMP_FOLDER_PATH, PROCESS_DIRECTORIES, RECURSION_MODE };
